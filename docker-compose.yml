@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  app:
+    container_name: avito-intership-2022
+    build: ./
+    ports:
+      - 8080:8080
+    restart: on-failure
+    depends_on:
+      - db
+    networks:
+      - avito
+
+  db:
+    image: postgres:latest
+    container_name: db_postgres
+    environment:
+      - POSTGRES_USER=prr133f
+      - POSTGRES_PASSWORD=123arra321
+      - POSTGRES_DB=avito
+      - DATABASE_HOST=localhost:5342
+    ports:
+      - 5432:5432
+    volumes:
+      - database_postgres:/var/lib/postgresql/data
+    networks:
+      - avito
+
+volumes:
+  database_postgres:
+
+networks:
+  avito:
+    driver: bridge

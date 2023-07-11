@@ -1,0 +1,76 @@
+basePath: /v1
+definitions:
+  models.UserAddBalance:
+    properties:
+      add_balance:
+        type: number
+      id:
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: This is solution iv avito backend intership 2022 by prr133f
+  title: Avito Intership 2022 Solution API
+  version: "1.0"
+paths:
+  /balance:
+    put:
+      consumes:
+      - application/json
+      description: Returns new balance of user
+      parameters:
+      - description: DTO for adding user balance
+        in: body
+        name: dto
+        required: true
+        schema:
+          $ref: '#/definitions/models.UserAddBalance'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: number
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Add balance to user
+      tags:
+      - Balance
+  /balance/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Returns balance of user by id
+      parameters:
+      - description: uuid of user
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: number
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get balance of user
+      tags:
+      - Balance
+swagger: "2.0"

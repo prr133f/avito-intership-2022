@@ -1,0 +1,6 @@
+app:
+  log_level: debug
+  port: "8080"
+
+postgres:
+  dsn: "postgres://prr133f:123arra321@db:5432/avito"

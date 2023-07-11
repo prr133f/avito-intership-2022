@@ -1,11 +1,28 @@
 basePath: /v1
 definitions:
+  models.Error:
+    properties:
+      text:
+        type: string
+    type: object
+  models.GetBalance:
+    properties:
+      balance:
+        type: number
+    type: object
   models.UserAddBalance:
     properties:
       add_balance:
         type: number
       id:
         type: string
+    type: object
+  models.UserReserveAmount:
+    properties:
+      id:
+        type: string
+      reserved_amount:
+        type: number
     type: object
 host: localhost:8080
 info:
@@ -38,9 +55,7 @@ paths:
         "400":
           description: Bad Request
           schema:
-            additionalProperties:
-              type: string
-            type: object
+            $ref: '#/definitions/models.Error'
       summary: Add balance to user
       tags:
       - Balance
@@ -61,16 +76,40 @@ paths:
         "200":
           description: OK
           schema:
+            $ref: '#/definitions/models.GetBalance'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.Error'
+      summary: Get balance of user
+      tags:
+      - Balance
+  /reserve:
+    put:
+      consumes:
+      - application/json
+      description: Reserves a part of user balance
+      parameters:
+      - description: DTO for reserving part of user balance
+        in: body
+        name: dto
+        required: true
+        schema:
+          $ref: '#/definitions/models.UserReserveAmount'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
             additionalProperties:
               type: number
             type: object
         "400":
           description: Bad Request
           schema:
-            additionalProperties:
-              type: string
-            type: object
-      summary: Get balance of user
+            $ref: '#/definitions/models.Error'
+      summary: Reserve part of user balance
       tags:
       - Balance
 swagger: "2.0"

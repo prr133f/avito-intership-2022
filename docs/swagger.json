@@ -37,10 +37,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "number"
-                            }
+                            "$ref": "#/definitions/models.AddBalance"
                         }
                     },
                     "400": {
@@ -90,6 +87,87 @@
                 }
             }
         },
+        "/commit": {
+            "put": {
+                "description": "Commites previous reserved amount",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Balance"
+                ],
+                "summary": "Commit reserved amount",
+                "parameters": [
+                    {
+                        "description": "DTO for commiting amount",
+                        "name": "dto",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.UserCommitAmount"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.ReserveBalance"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/models.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/report/{date}": {
+            "put": {
+                "description": "Returns monthly margin report",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Report"
+                ],
+                "summary": "Get monthly report",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "date in format YYYY-MM",
+                        "name": "date",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.MonthlyReport"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/models.Error"
+                        }
+                    }
+                }
+            }
+        },
         "/reserve": {
             "put": {
                 "description": "Reserves a part of user balance",
@@ -118,10 +196,47 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "number"
-                            }
+                            "$ref": "#/definitions/models.ReserveBalance"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/models.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/restore": {
+            "put": {
+                "description": "Restores a part of reserved user balance",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Balance"
+                ],
+                "summary": "Restore part of reserved user balance",
+                "parameters": [
+                    {
+                        "description": "DTO for restoring part of reserved user balance",
+                        "name": "dto",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.UserRestoreReservedAmount"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.GetBalance"
                         }
                     },
                     "400": {
@@ -135,6 +250,14 @@
         }
     },
     "definitions": {
+        "models.AddBalance": {
+            "type": "object",
+            "properties": {
+                "new_balance": {
+                    "type": "number"
+                }
+            }
+        },
         "models.Error": {
             "type": "object",
             "properties": {
@@ -151,6 +274,25 @@
                 }
             }
         },
+        "models.MonthlyReport": {
+            "type": "object",
+            "properties": {
+                "margin": {
+                    "type": "number"
+                },
+                "service_name": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.ReserveBalance": {
+            "type": "object",
+            "properties": {
+                "reserved_balance": {
+                    "type": "number"
+                }
+            }
+        },
         "models.UserAddBalance": {
             "type": "object",
             "properties": {
@@ -162,14 +304,57 @@
                 }
             }
         },
+        "models.UserCommitAmount": {
+            "type": "object",
+            "properties": {
+                "commited_amount": {
+                    "type": "number"
+                },
+                "order_id": {
+                    "type": "string"
+                },
+                "service_id": {
+                    "type": "string"
+                },
+                "user_id": {
+                    "type": "string"
+                }
+            }
+        },
         "models.UserReserveAmount": {
             "type": "object",
             "properties": {
-                "id": {
+                "order_id": {
                     "type": "string"
                 },
                 "reserved_amount": {
                     "type": "number"
+                },
+                "service_id": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "user_id": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.UserRestoreReservedAmount": {
+            "type": "object",
+            "properties": {
+                "order_id": {
+                    "type": "string"
+                },
+                "restored_amount": {
+                    "type": "number"
+                },
+                "service_id": {
+                    "type": "string"
+                },
+                "user_id": {
+                    "type": "string"
                 }
             }
         }

@@ -9,6 +9,9 @@ import (
 
 	log "github.com/sirupsen/logrus"
 
+	_ "avito-intership-2022/docs"
+
+	swagger "github.com/arsmn/fiber-swagger/v2"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -20,5 +23,6 @@ func InitRouter(app *fiber.App, conf *config.Config) {
 	view := view.View{Pg: pg}
 	router := v1.Router{App: app, View: &view}
 	router.Routes()
-	app.Get("/ping", func(c *fiber.Ctx) error { return c.SendString("PONG") })
+	app.Get("/ping", func(c *fiber.Ctx) error { return c.SendStatus(fiber.StatusNoContent) })
+	app.Get("/swagger/*", swagger.HandlerDefault)
 }

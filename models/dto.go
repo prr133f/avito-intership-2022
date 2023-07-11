@@ -8,6 +8,23 @@ type UserAddBalance struct {
 }
 
 type UserReserveAmount struct {
-	ID             uuid.UUID `json:"id"`
+	OrderID        uuid.UUID `json:"order_id"`
+	UserID         uuid.UUID `json:"user_id"`
+	ServiceID      uuid.UUID `json:"service_id"`
 	ReservedAmount float64   `json:"reserved_amount"`
+	Title          string    `json:"title"`
+}
+
+type UserCommitAmount struct {
+	UserID         uuid.UUID `json:"user_id"`
+	ServiceID      uuid.UUID `json:"service_id"`
+	OrderID        uuid.UUID `json:"order_id"`
+	CommitedAmount float64   `json:"commited_amount"`
+}
+
+type UserRestoreReservedAmount struct {
+	OrderID        uuid.UUID `json:"order_id"`
+	UserID         uuid.UUID `json:"user_id"`
+	ServiceID      uuid.UUID `json:"service_id"`
+	RestoredAmount float64   `json:"restored_amount"`
 }

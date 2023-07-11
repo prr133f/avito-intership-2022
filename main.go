@@ -3,6 +3,7 @@ package main
 import (
 	"avito-intership-2022/config"
 	"avito-intership-2022/routes"
+	"avito-intership-2022/utils"
 	"fmt"
 
 	log "github.com/sirupsen/logrus"
@@ -22,9 +23,8 @@ func main() {
 		AppName:        "prr133f-avito-intership-2022",
 		RequestMethods: []string{"GET", "HEAD", "PUT"},
 	})
-	app.Use(logger.New(logger.Config{
-		DisableColors: false,
-	}))
+	app.Use(logger.New(logger.ConfigDefault))
+	utils.InitLogger()
 
 	config := config.ParseConfig()
 

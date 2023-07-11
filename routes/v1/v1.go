@@ -20,4 +20,5 @@ func (r *Router) Routes() {
 	v1 := r.App.Group("/v1")
 	route := Route{Group: &v1, View: r.View}
 	route.Balance()
+	route.Report()
 }

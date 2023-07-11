@@ -1,5 +1,10 @@
 basePath: /v1
 definitions:
+  models.AddBalance:
+    properties:
+      new_balance:
+        type: number
+    type: object
   models.Error:
     properties:
       text:
@@ -10,6 +15,18 @@ definitions:
       balance:
         type: number
     type: object
+  models.MonthlyReport:
+    properties:
+      margin:
+        type: number
+      service_name:
+        type: string
+    type: object
+  models.ReserveBalance:
+    properties:
+      reserved_balance:
+        type: number
+    type: object
   models.UserAddBalance:
     properties:
       add_balance:
@@ -17,12 +34,40 @@ definitions:
       id:
         type: string
     type: object
+  models.UserCommitAmount:
+    properties:
+      commited_amount:
+        type: number
+      order_id:
+        type: string
+      service_id:
+        type: string
+      user_id:
+        type: string
+    type: object
   models.UserReserveAmount:
     properties:
-      id:
+      order_id:
         type: string
       reserved_amount:
         type: number
+      service_id:
+        type: string
+      title:
+        type: string
+      user_id:
+        type: string
+    type: object
+  models.UserRestoreReservedAmount:
+    properties:
+      order_id:
+        type: string
+      restored_amount:
+        type: number
+      service_id:
+        type: string
+      user_id:
+        type: string
     type: object
 host: localhost:8080
 info:
@@ -49,9 +94,7 @@ paths:
         "200":
           description: OK
           schema:
-            additionalProperties:
-              type: number
-            type: object
+            $ref: '#/definitions/models.AddBalance'
         "400":
           description: Bad Request
           schema:
@@ -84,6 +127,59 @@ paths:
       summary: Get balance of user
       tags:
       - Balance
+  /commit:
+    put:
+      consumes:
+      - application/json
+      description: Commites previous reserved amount
+      parameters:
+      - description: DTO for commiting amount
+        in: body
+        name: dto
+        required: true
+        schema:
+          $ref: '#/definitions/models.UserCommitAmount'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.ReserveBalance'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.Error'
+      summary: Commit reserved amount
+      tags:
+      - Balance
+  /report/{date}:
+    put:
+      consumes:
+      - application/json
+      description: Returns monthly margin report
+      parameters:
+      - description: date in format YYYY-MM
+        in: path
+        name: date
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.MonthlyReport'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.Error'
+      summary: Get monthly report
+      tags:
+      - Report
   /reserve:
     put:
       consumes:
@@ -102,14 +198,38 @@ paths:
         "200":
           description: OK
           schema:
-            additionalProperties:
-              type: number
-            type: object
+            $ref: '#/definitions/models.ReserveBalance'
         "400":
           description: Bad Request
           schema:
             $ref: '#/definitions/models.Error'
       summary: Reserve part of user balance
+      tags:
+      - Balance
+  /restore:
+    put:
+      consumes:
+      - application/json
+      description: Restores a part of reserved user balance
+      parameters:
+      - description: DTO for restoring part of reserved user balance
+        in: body
+        name: dto
+        required: true
+        schema:
+          $ref: '#/definitions/models.UserRestoreReservedAmount'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.GetBalance'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.Error'
+      summary: Restore part of reserved user balance
       tags:
       - Balance
 swagger: "2.0"

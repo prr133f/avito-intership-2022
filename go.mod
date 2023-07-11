@@ -3,6 +3,7 @@ module avito-intership-2022
 go 1.20
 
 require (
+	github.com/arsmn/fiber-swagger/v2 v2.31.1
 	github.com/gofiber/fiber/v2 v2.47.0
 	github.com/jackc/pgx/v5 v5.4.1
 	github.com/swaggo/swag v1.16.1
@@ -12,6 +13,7 @@ require (
 	github.com/KyleBanks/depth v1.2.1 // indirect
 	github.com/jackc/puddle/v2 v2.2.0 // indirect
 	github.com/stretchr/testify v1.8.4 // indirect
+	golang.org/x/net v0.10.0 // indirect
 	golang.org/x/sync v0.1.0 // indirect
 	golang.org/x/tools v0.7.0 // indirect
 )
@@ -37,6 +39,7 @@ require (
 	github.com/savsgio/dictpool v0.0.0-20221023140959-7bf2e61cea94 // indirect
 	github.com/savsgio/gotils v0.0.0-20230208104028-c358bd845dee // indirect
 	github.com/sirupsen/logrus v1.9.3
+	github.com/swaggo/files v1.0.1 // indirect
 	github.com/tinylib/msgp v1.1.8 // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
 	github.com/valyala/fasthttp v1.48.0 // indirect

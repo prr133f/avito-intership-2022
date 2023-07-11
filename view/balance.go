@@ -35,9 +35,7 @@ func (v *View) GetBalance(c *fiber.Ctx) error {
 		})
 	}
 
-	return c.Status(fiber.StatusOK).JSON(models.GetBalance{
-		Balance: balance,
-	})
+	return c.Status(fiber.StatusOK).JSON(balance)
 }
 
 //	@Summary		Add balance to user
@@ -46,7 +44,7 @@ func (v *View) GetBalance(c *fiber.Ctx) error {
 //	@Accept			json
 //	@Produce		json
 //	@Param			dto	body		models.UserAddBalance	true	"DTO for adding user balance"
-//	@Success		200	{object}	map[string]float64{}
+//	@Success		200	{object}	models.AddBalance
 //	@Failure		400	{object}	models.Error
 //	@Router			/balance [put]
 func (v *View) AddBalance(c *fiber.Ctx) error {
@@ -59,6 +57,10 @@ func (v *View) AddBalance(c *fiber.Ctx) error {
 		})
 	}
 
+	if dto.AddBalance < 0 {
+		return c.Status(fiber.StatusBadRequest).JSON(models.Error{Text: "add_balance cannot be negative"})
+	}
+
 	newBalance, err := v.Pg.AddBalance(*dto)
 	if err != nil {
 		log.Error(err)
@@ -67,9 +69,7 @@ func (v *View) AddBalance(c *fiber.Ctx) error {
 		})
 	}
 
-	return c.Status(fiber.StatusOK).JSON(models.AddBalance{
-		NewBalance: newBalance,
-	})
+	return c.Status(fiber.StatusOK).JSON(newBalance)
 }
 
 //	@Summary		Reserve part of user balance
@@ -78,7 +78,7 @@ func (v *View) AddBalance(c *fiber.Ctx) error {
 //	@Accept			json
 //	@Produce		json
 //	@Param			dto	body		models.UserReserveAmount	true	"DTO for reserving part of user balance"
-//	@Success		200	{object}	map[string]float64{}
+//	@Success		200	{object}	models.ReserveBalance
 //	@Failure		400	{object}	models.Error
 //	@Router			/reserve [put]
 func (v *View) ReserveAmount(c *fiber.Ctx) error {
@@ -99,7 +99,65 @@ func (v *View) ReserveAmount(c *fiber.Ctx) error {
 		})
 	}
 
-	return c.Status(fiber.StatusOK).JSON(models.ReserveBalance{
-		ReservedBalance: reservedBalance,
-	})
+	return c.Status(fiber.StatusOK).JSON(reservedBalance)
+}
+
+//	@Summary		Commit reserved amount
+//	@Description	Commites previous reserved amount
+//	@Tags			Balance
+//	@Accept			json
+//	@Produce		json
+//	@Param			dto	body		models.UserCommitAmount	true	"DTO for commiting amount"
+//	@Success		200	{object}	models.ReserveBalance
+//	@Failure		400	{object}	models.Error
+//	@Router			/commit [put]
+func (v *View) CommitAmount(c *fiber.Ctx) error {
+	dto := new(models.UserCommitAmount)
+
+	if err := c.BodyParser(dto); err != nil {
+		log.Error(err)
+		return c.Status(fiber.StatusBadRequest).JSON(models.Error{
+			Text: err.Error(),
+		})
+	}
+
+	reservedBalance, err := v.Pg.CommitAmount(*dto)
+	if err != nil {
+		log.Error(err)
+		return c.Status(fiber.StatusBadRequest).JSON(models.Error{
+			Text: err.Error(),
+		})
+	}
+
+	return c.Status(fiber.StatusOK).JSON(reservedBalance)
+}
+
+//	@Summary		Restore part of reserved user balance
+//	@Description	Restores a part of reserved user balance
+//	@Tags			Balance
+//	@Accept			json
+//	@Produce		json
+//	@Param			dto	body		models.UserRestoreReservedAmount	true	"DTO for restoring part of reserved user balance"
+//	@Success		200	{object}	models.GetBalance
+//	@Failure		400	{object}	models.Error
+//	@Router			/restore [put]
+func (v *View) RestoreAmount(c *fiber.Ctx) error {
+	dto := new(models.UserRestoreReservedAmount)
+
+	if err := c.BodyParser(dto); err != nil {
+		log.Error(err)
+		return c.Status(fiber.StatusBadRequest).JSON(models.Error{
+			Text: err.Error(),
+		})
+	}
+
+	currentBalance, err := v.Pg.RestoreReservedAmount(*dto)
+	if err != nil {
+		log.Error(err)
+		return c.Status(fiber.StatusBadRequest).JSON(models.Error{
+			Text: err.Error(),
+		})
+	}
+
+	return c.Status(fiber.StatusOK).JSON(currentBalance)
 }

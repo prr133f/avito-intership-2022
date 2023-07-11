@@ -19,3 +19,8 @@ type AddBalance struct {
 type ReserveBalance struct {
 	ReservedBalance float64 `json:"reserved_balance"`
 }
+
+type MonthlyReport struct {
+	ServiceName string  `json:"service_name"`
+	Margin      float64 `json:"margin"`
+}

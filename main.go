@@ -6,7 +6,7 @@ import (
 	"avito-intership-2022/utils"
 	"fmt"
 
-	log "github.com/sirupsen/logrus"
+	"github.com/rs/zerolog/log"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/logger"
@@ -16,8 +16,8 @@ import (
 //	@version		1.0
 //	@description	This is solution iv avito backend intership 2022 by prr133f
 
-//	@host		localhost:8080
-//	@BasePath	/v1
+// @host		localhost:8080
+// @BasePath	/v1
 func main() {
 	app := fiber.New(fiber.Config{
 		AppName:        "prr133f-avito-intership-2022",
@@ -30,5 +30,5 @@ func main() {
 
 	routes.InitRouter(app, config)
 
-	log.Fatal(app.Listen(fmt.Sprintf(":%s", config.Port)))
+	log.Fatal().Err(app.Listen(fmt.Sprintf(":%s", config.Port)))
 }

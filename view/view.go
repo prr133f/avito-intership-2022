@@ -5,5 +5,5 @@ import (
 )
 
 type View struct {
-	Pg *domain.Postgres
+	Logic *domain.Logic
 }

@@ -5,7 +5,7 @@ import (
 	"sync"
 
 	"github.com/jackc/pgx/v5/pgxpool"
-	log "github.com/sirupsen/logrus"
+	"github.com/rs/zerolog/log"
 )
 
 type Postgres struct {
@@ -21,7 +21,7 @@ func NewPG(ctx context.Context, DSN string) (*Postgres, error) {
 	pgOnce.Do(func() {
 		db, err := pgxpool.New(ctx, DSN)
 		if err != nil {
-			log.Fatal(err)
+			log.Fatal().Err(err)
 		}
 
 		pgInstance = &Postgres{DB: db}
